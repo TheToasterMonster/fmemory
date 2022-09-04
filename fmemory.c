@@ -1,6 +1,5 @@
 #include "fmemory.h"
 
-#include <stdio.h>
 #include <string.h>
 
 #define HEAP_SIZE 2000
