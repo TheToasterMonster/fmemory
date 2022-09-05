@@ -17,7 +17,7 @@ size_t get_total_allocated() { return total_allocated; }
 
 int is_block_available(size_t index, size_t size) {
     while (size--) {
-        if (index < HEAP_SIZE && status[index++][0]) {
+        if (index > HEAP_SIZE || status[index++][0]) {
             return 0;
         }
     }
@@ -32,8 +32,15 @@ void* malloc(size_t size) {
         end += size;
     } else {
         index = 0;
-        while (status[index][0] && is_block_available(index, size)) {
-            index = status[index][1];
+        while (1) {
+            if (status[index][0]) {
+                index = status[index][1];
+            } else if (!is_block_available(index, size)) {
+                index++;
+            } else {
+                break;
+            }
+
             if (index >= HEAP_SIZE) {
                 return NULL;
             }
